@@ -1,34 +1,28 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CubeDuplicator : MonoBehaviour
 {
-    [SerializeField] private Cube _cube;
     [SerializeField] private int _minAmount = 2;
     [SerializeField] private int _maxAmount = 6;
+    
+    private List<Cube> _lastCreatedCubes;
 
-    private void OnEnable()
+    public event UnityAction<Cube> CreatedNewCube;
+
+    public List<Cube> GetLastDuplicated => _lastCreatedCubes;
+
+    public void Duplicate(Cube cube)
     {
-        _cube.TryDuplicateCube += OnTryDuplicateCube;
-    }
+        int amount = Random.Range(_minAmount, _maxAmount);
+        _lastCreatedCubes = new List<Cube>();
 
-    private void OnTryDuplicateCube(GameObject cubeObject)
-    {
-        Cube parentCube = cubeObject.GetComponent<Cube>();
-
-        if (Random.Range(0, 100) <= parentCube.ActionChance)
+        for (int i = 0; i < amount; i++)
         {
-            int amount = Random.Range(_minAmount, _maxAmount);
-
-            for (int i = 0; i < amount; i++)
-            {
-                Vector3 position = cubeObject.transform.position;
-                GameObject newborn = Instantiate(cubeObject, position, Quaternion.identity);
-                Cube newbornCube = newborn.GetComponent<Cube>();
-                newbornCube.TryDuplicateCube += OnTryDuplicateCube;
-            }
+            Cube newborn = Instantiate(cube);
+            _lastCreatedCubes.Add(newborn);
+            newborn.Init();
         }
-
-        parentCube.TryDuplicateCube -= OnTryDuplicateCube;
     }
 }
