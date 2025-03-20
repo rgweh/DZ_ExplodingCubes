@@ -11,11 +11,21 @@ public class CubeDuplicator : MonoBehaviour
 
     public event UnityAction<Cube> CreatedNewCube;
 
-    public List<Cube> GetLastDuplicated => _lastCreatedCubes;
+    public List<Cube> GetLastDuplicated()
+    {
+       List<Cube> lastCreatedCubes = new List<Cube>();
+
+        foreach (Cube cube in _lastCreatedCubes)
+        {
+            lastCreatedCubes.Add(cube);
+        }
+
+        return lastCreatedCubes;
+    }
 
     public void Duplicate(Cube cube)
     {
-        int amount = Random.Range(_minAmount, _maxAmount);
+        int amount = Random.Range(_minAmount, _maxAmount + 1);
         _lastCreatedCubes = new List<Cube>();
 
         for (int i = 0; i < amount; i++)

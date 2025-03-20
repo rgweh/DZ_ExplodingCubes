@@ -10,8 +10,10 @@ public class Exploder : MonoBehaviour
     {
         foreach (Cube cube in cubes)
         {
-            Rigidbody cubeRigidBody = cube.GetComponent<Rigidbody>();
-            cubeRigidBody.AddExplosionForce(_explodeForse, cube.transform.position, _explodeRadius);
+            if(cube.TryGetComponent<Rigidbody>(out Rigidbody cubeRigidBody))
+            {
+                cubeRigidBody.AddExplosionForce(_explodeForse, cube.transform.position, _explodeRadius);
+            }
         }
     }
 }

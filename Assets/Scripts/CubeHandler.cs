@@ -22,21 +22,28 @@ public class CubeHandler : MonoBehaviour
         SubscribeToNewCubes();
     }
 
-
-    private void Explode()
+    private void Explode(Cube cube)
     {
-        _exploder.Explode(_cubeDuplicator.GetLastDuplicated);
+        _exploder.Explode(_cubeDuplicator.GetLastDuplicated());
+
+        UnsubscribeFrom(cube);
     }
 
     public void SubscribeTo(Cube cube)
     {
-        cube.DuplicateCube += Duplicate;
-        cube.ExplodeCube += Explode;
+        cube.Duplicating += Duplicate;
+        cube.Exploding += Explode;
+    }
+    
+    public void UnsubscribeFrom(Cube cube)
+    {
+        cube.Duplicating -= Duplicate;
+        cube.Exploding -= Explode;
     }
 
     private void SubscribeToNewCubes()
     {
-        foreach (Cube duplicatedCube in _cubeDuplicator.GetLastDuplicated)
+        foreach (Cube duplicatedCube in _cubeDuplicator.GetLastDuplicated())
         {
             SubscribeTo(duplicatedCube);
         }
