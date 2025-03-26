@@ -8,11 +8,23 @@ public class CubeHandler : MonoBehaviour
     [SerializeField] private Cube _cube;
     [SerializeField] private Vector3 _spawnpoint;
 
-    public void Start()
+    void Start()
     {
         Cube firstCube = Instantiate(_cube, _spawnpoint, Quaternion.identity);
         firstCube.Init();
         SubscribeTo(firstCube);
+    }
+
+    public void SubscribeTo(Cube cube)
+    {
+        cube.Duplicating += Duplicate;
+        cube.Exploding += Explode;
+    }
+
+    public void UnsubscribeFrom(Cube cube)
+    {
+        cube.Duplicating -= Duplicate;
+        cube.Exploding -= Explode;
     }
 
     private void Duplicate(Cube cube)
@@ -27,18 +39,6 @@ public class CubeHandler : MonoBehaviour
         _exploder.Explode(_cubeDuplicator.GetLastDuplicated());
 
         UnsubscribeFrom(cube);
-    }
-
-    public void SubscribeTo(Cube cube)
-    {
-        cube.Duplicating += Duplicate;
-        cube.Exploding += Explode;
-    }
-    
-    public void UnsubscribeFrom(Cube cube)
-    {
-        cube.Duplicating -= Duplicate;
-        cube.Exploding -= Explode;
     }
 
     private void SubscribeToNewCubes()

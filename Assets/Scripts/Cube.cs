@@ -9,11 +9,13 @@ public class Cube : MonoBehaviour
 
     private float _actionChance;
     private float _scaleReduce = 2;
+    private int _actionChanceRangeMax = 101;
+    private int _actionChanceRangeMin = 0;
 
     public event UnityAction<Cube> Duplicating;
     public event UnityAction<Cube> Exploding;
 
-    private void OnMouseUpAsButton()
+    void OnMouseUpAsButton()
     {
         if(TryDuplicate())
             Explode();
@@ -36,9 +38,7 @@ public class Cube : MonoBehaviour
 
     private bool TryDuplicate()
     {
-        List<Cube> cubes = new List<Cube>();
-
-        if (Random.Range(0, 101) <= _actionChance)
+        if (Random.Range(_actionChanceRangeMin, _actionChanceRangeMax) <= _actionChance)
         {
             Duplicating?.Invoke(this);
             return true;
